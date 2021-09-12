@@ -49,7 +49,77 @@ contract NFTMarket is ReentrancyGuard {
         uint256 tokenId,
         uint256 price
     ) public payable nonReentrant {
-        
+        require(price > 0, "Price must be at least 1 wei");
+        require(msg.value == listingPrice, "price must be equal to the listing price");
+
+        _itemIds.increment();
+        uint256 itemId = _itemIds.current();
+
+        idToMarketItem[itemId] = MarketItem(
+            itemId,
+            nftContract,
+            tokenId,
+            payable(msg.sender),
+            payable(address(0)),
+            price,
+            false
+        );   
+
+        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+
+        emit MarketItemCreated(
+            itemId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            address(0),
+            price,
+            false
+        );
     }
+
+    function createMarketSale(
+        address nftContract,
+        uint256 itemId
+    ) public payable nonReentrant {
+        uint price = idToMarketItem[itemId].price;
+        uint tokenId = idToMarketItem[itemId].tokenId;
+        require(msg.value == price, "Please submit the asking price in order ot complete the purchase");
+
+        idToMarketItem[itemId].seller.transfer(msg.value);
+
+        //Note to self: the interface used below ensures the token is transfered from the current owner
+        // to new owner; market contract only facilitates the sale; address(this) below points to
+        // the ERC721 contract address
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
+        //Why payable on the RHS? the MarketItem struct has type address payable for owner (and seller)
+        idToMarketItem[itemId].owner = payable(msg.sender);
+        idToMarketItem[itemId].sold = true;
+        _itemsSold.increment();
+        payable(owner).transfer(listingPrice);
+
+    }
+
+    function fetchMarketItems() public view returns (MarketItem[] memory){
+        uint itemCount = _itemIds.current();
+        uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
+        uint currentIndex = 0;
+
+        MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+        for(uint i=0; i< itemCount; i++){
+            if(idToMarketItem[i+1].owner == address(0)){
+                uint currentId = idToMarketItem[i+1].itemId;
+                MarketItem storage currentItem = idToMarketItem[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex++;
+            }
+        }
+
+        return items;
+
+    }
+
+    
 
 }
