@@ -78,6 +78,7 @@ contract NFTMarket is ReentrancyGuard {
         );
     }
 
+
     function createMarketSale(
         address nftContract,
         uint256 itemId
@@ -122,16 +123,52 @@ contract NFTMarket is ReentrancyGuard {
 
     function fetchMyNFTs() public view returns (MarketItem[] memory){
         uint totalItemCount = _itemIds.current();
+        uint itemCount = 0;
         uint currentIndex = 0;
 
-        MarketItem[] memory myItems = new MarketItem[];
-        for(uint=0; i<totalItemCount; i++){
-            if(idToMarketItem[i+1].owner == address(msg.sender)){
-                myItems.push(idToMarketItem[i+1]); 
+        for(uint i=0; i<totalItemCount; i++){
+            if(idToMarketItem[i+1].owner == msg.sender){
+                itemCount++;
             }
         }
+
+        MarketItem[] memory myItems = new MarketItem[](itemCount);
+        for(uint=0; i<totalItemCount; i++){
+            if(idToMarketItem[i+1].owner == msg.sender){
+                uint currentId = idToMarketItem[i+1].itemId;
+                MarketItem storage currentItem = idToMarketItem[currentId]]
+                myItems[currentIndex]= currentItem;
+                currentIndex++; 
+            }
+        }
+
+        return myItems;
     }
 
+    function fetchItemsCreated() public view returns (MarketItem[] memory){
+        uint totalItemCount = itemIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for(uint i=0; i<totalItemCount; i++){
+            if(idToMarketItem[i+1].seller == msg.sender){
+                itemCount++;
+            }
+        }
+
+        MarketItem[] memory myItems = new MarketItem[](itemCount);
+        for(uint=0; i<totalItemCount; i++){
+            if(idToMarketItem[i+1].seller == msg.sender){
+                uint currentId = idToMarketItem[i+1].itemId;
+                MarketItem storage currentItem = idToMarketItem[currentId]]
+                myItems[currentIndex]= currentItem;
+                currentIndex++; 
+            }
+        }
+
+        return myItems;
+
+    }
     
 
 }
