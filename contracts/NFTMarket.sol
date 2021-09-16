@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity "^0.8.4";
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -133,10 +133,10 @@ contract NFTMarket is ReentrancyGuard {
         }
 
         MarketItem[] memory myItems = new MarketItem[](itemCount);
-        for(uint=0; i<totalItemCount; i++){
+        for(uint i=0; i<totalItemCount; i++){
             if(idToMarketItem[i+1].owner == msg.sender){
                 uint currentId = idToMarketItem[i+1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId]]
+                MarketItem storage currentItem = idToMarketItem[currentId];
                 myItems[currentIndex]= currentItem;
                 currentIndex++; 
             }
@@ -146,7 +146,7 @@ contract NFTMarket is ReentrancyGuard {
     }
 
     function fetchItemsCreated() public view returns (MarketItem[] memory){
-        uint totalItemCount = itemIds.current();
+        uint totalItemCount = _itemIds.current();
         uint itemCount = 0;
         uint currentIndex = 0;
 
@@ -157,10 +157,10 @@ contract NFTMarket is ReentrancyGuard {
         }
 
         MarketItem[] memory myItems = new MarketItem[](itemCount);
-        for(uint=0; i<totalItemCount; i++){
+        for(uint i=0; i<totalItemCount; i++){
             if(idToMarketItem[i+1].seller == msg.sender){
                 uint currentId = idToMarketItem[i+1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId]]
+                MarketItem storage currentItem = idToMarketItem[currentId];
                 myItems[currentIndex]= currentItem;
                 currentIndex++; 
             }
