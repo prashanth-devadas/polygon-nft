@@ -13,7 +13,6 @@ import {
   
   import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
   import NFTMarket from '../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
-import { route } from 'next/dist/server/router'
 
   export default function CreateItem() {
       const [fileUrl, setFileUrl] = useState(null)
@@ -28,7 +27,7 @@ import { route } from 'next/dist/server/router'
                 file,
                 // this block takes care of file upload
                 {
-                    progress: (prog) => console.log(`received: ${prog}`);
+                    progress: (prog) => console.log(`received: ${prog}`)
                 }
             )
             const url = `https://ipfs.infura.io/ipfs/${added.path}`
@@ -47,16 +46,16 @@ import { route } from 'next/dist/server/router'
 
           try{
               const added = await client.add(data)
-              const url = `https://ipfs.infura.io/${added.path}`
+              const url = `https://ipfs.infura.io/ipfs/${added.path}`
               /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
               createSale(url)
           } catch(err){
-              console.log('Error uploading file: ', error);
+              console.log('Error uploading file: ', err);
           }
       }
 
       
-      async function createSale(){
+      async function createSale(url){
           const web3modal = new Web3Modal()
           const connection = await web3modal.connect()
           const provider = new ethers.providers.Web3Provider(connection)
@@ -105,6 +104,15 @@ import { route } from 'next/dist/server/router'
                   name="Asset"
                   className="my-4"
                   onChange={onChange} />
+                  {
+                      fileUrl && (
+                          <img className="rounded mt-4" width="350" src={fileUrl}/>
+                      )
+                  }
+                  <button onClick={createItem}
+                  className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
+                      Create Digital Asset
+                  </button>
               </div>
 
           </div>
