@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
-import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/router'
 import axios from 'axios'
 import Web3Modal from "web3modal"
 
@@ -33,7 +33,7 @@ import {
             const url = `https://ipfs.infura.io/ipfs/${added.path}`
             setFileUrl(url)
           } catch(e){
-              console.log(e);
+              console.log("Error uploading file: ", e);
           }
       }
 
@@ -49,8 +49,8 @@ import {
               const url = `https://ipfs.infura.io/ipfs/${added.path}`
               /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
               createSale(url)
-          } catch(err){
-              console.log('Error uploading file: ', err);
+          } catch(e){
+              console.log('Error uploading file: ', e);
           }
       }
 
@@ -90,15 +90,18 @@ import {
                   <input
                   placeholder="Asset Name"
                   className="mt-8 border rounded p-4"
-                  onChange={e=> updateFormInput({ ...formInput, name: e.target.value })} />
+                  onChange={e=> updateFormInput({ ...formInput, name: e.target.value })} 
+                  />
                   <textarea 
                   placeholder="Asset Description"
                   className="mt-2 border rounded p-4"
-                  onChange={e => updateFormInput({...formInput, price: e.target.value})}/>
+                  onChange={e => updateFormInput({...formInput, price: e.target.value})}
+                  />
                   <input
                   placeholder="Asset Price in Matic"
                   className="mt-8 border rounded p-4"
-                  onChange={e=> updateFormInput({ ...formInput, name: e.target.value })} />
+                  onChange={e=> updateFormInput({ ...formInput, name: e.target.value })} 
+                  />
                   <input
                   type="file"
                   name="Asset"
