@@ -72,8 +72,9 @@ import {
           const price = ethers.utils.parseUnits(formInput.price, 'ether')
 
           contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer)
-
-          let listingPrice = listingPrice.toString()
+          
+          let listingPrice = await contract.getListingPrice()
+          listingPrice = listingPrice.toString()
 
           transaction = await contract.createMarketItem(
               nftaddress, tokenId, price, {value: listingPrice}
@@ -95,12 +96,12 @@ import {
                   <textarea 
                   placeholder="Asset Description"
                   className="mt-2 border rounded p-4"
-                  onChange={e => updateFormInput({...formInput, price: e.target.value})}
+                  onChange={e => updateFormInput({...formInput, description: e.target.value})}
                   />
                   <input
                   placeholder="Asset Price in Matic"
                   className="mt-8 border rounded p-4"
-                  onChange={e=> updateFormInput({ ...formInput, name: e.target.value })} 
+                  onChange={e=> updateFormInput({ ...formInput, price: e.target.value })} 
                   />
                   <input
                   type="file"

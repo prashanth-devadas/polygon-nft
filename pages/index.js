@@ -27,7 +27,7 @@ export default function Home() {
       const data = await marketContract.fetchMarketItems()
 
       const items = await Promise.all(data.map(async i => {
-        const tokenUri = await tokenContract.tokenUri(i.tokenId)
+        const tokenUri = await tokenContract.tokenURI(i.tokenId)
         const meta = await axios.get(tokenUri)
         let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
         let item = {
@@ -92,8 +92,8 @@ export default function Home() {
                   <p className="text-2xl mb-4 font-bold text-white">
                     {nft.price} Matic
                   </p>
-                  <button className="w-full bg-pink-500 text-white font-bold py-2 px=12 rounded
-                  onClick={() => buyNft(nft)}">
+                  <button className="w-full bg-pink-500 text-white font-bold py-2 px=12 rounded"
+                  onClick={() => buyNft(nft)}>
                     Buy
                   </button>
 
